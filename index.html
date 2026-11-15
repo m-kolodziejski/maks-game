@@ -620,6 +620,7 @@
 
   <!-- Top Action Bar -->
   <div id="top-bar">
+    <button id="restart-lvl-btn" class="top-pill-btn" style="display: none;">🔄 Restart Level</button>
     <button id="touch-toggle" class="top-pill-btn">🎮 On-Screen Controls</button>
     <button id="sound-toggle" class="top-pill-btn">🔊 Audio: ON</button>
   </div>
@@ -1102,6 +1103,7 @@ const STATE = {
   envSpeed: 'medium',
   envSpeedMult: 1.0,
   spheres: 0,
+  levelStartSpheres: 0,
   inventory: new Set(),
   equipped: {},
   currentLevel: 1,
@@ -2329,8 +2331,17 @@ class Game {
     bindTouch('t-breath', 'breath', true);
   }
 
-  loadLevel(levelIndex) {
+  loadLevel(levelIndex, isRetry = false) {
     STATE.currentLevel = levelIndex;
+
+    // Fix: When retrying/restarting a level, restore spheres back to what player had entering this level.
+    // When starting a new level, save current spheres as the starting baseline.
+    if (isRetry) {
+      STATE.spheres = STATE.levelStartSpheres || 0;
+    } else {
+      STATE.levelStartSpheres = STATE.spheres;
+    }
+
     this.dragonData = DRAGON_TYPES[STATE.selectedDragon];
     this.maxHearts = this.dragonData.maxHearts;
     this.hearts = this.maxHearts;
@@ -2355,6 +2366,9 @@ class Game {
     STATE.levelStartTime = performance.now();
     STATE.levelSpheresCollected = 0;
     STATE.levelSpheresTotal = this.levelData.spheres.length;
+
+    const rstBtn = document.getElementById('restart-lvl-btn');
+    if (rstBtn) rstBtn.style.display = 'inline-block';
   }
 
   triggerBreath() {
@@ -2495,12 +2509,18 @@ class Game {
 
   gameOver() {
     this.isRunning = false;
+    // Immediately revert spheres collected during this failed run so they never accumulate
+    STATE.spheres = STATE.levelStartSpheres || 0;
+    const rstBtn = document.getElementById('restart-lvl-btn');
+    if (rstBtn) rstBtn.style.display = 'none';
     document.getElementById('gameover-screen').classList.add('active');
   }
 
   completeLevel() {
     this.isLevelEnded = true;
     this.isRunning = false;
+    const rstBtn = document.getElementById('restart-lvl-btn');
+    if (rstBtn) rstBtn.style.display = 'none';
     sfx.playWin();
 
     const elapsedSeconds = ((performance.now() - STATE.levelStartTime) / 1000).toFixed(1);
@@ -3336,7 +3356,15 @@ document.querySelectorAll('.speed-btn').forEach(btn => {
 document.getElementById('start-btn').addEventListener('click', () => {
   sfx.init();
   document.getElementById('select-screen').classList.remove('active');
-  game.loadLevel(1);
+  STATE.spheres = 0;
+  STATE.levelStartSpheres = 0;
+  game.loadLevel(1, false);
+});
+
+document.getElementById('restart-lvl-btn').addEventListener('click', () => {
+  if (game.isRunning && !game.isLevelEnded) {
+    game.loadLevel(STATE.currentLevel, true);
+  }
 });
 
 document.getElementById('open-shop-btn').addEventListener('click', () => {
@@ -3348,30 +3376,41 @@ document.getElementById('open-shop-btn').addEventListener('click', () => {
 
 document.getElementById('next-level-btn').addEventListener('click', () => {
   document.getElementById('score-screen').classList.remove('active');
-  game.loadLevel(STATE.currentLevel + 1);
+  game.loadLevel(STATE.currentLevel + 1, false);
 });
 
 document.getElementById('shop-continue-btn').addEventListener('click', () => {
   document.getElementById('shop-screen').classList.remove('active');
-  game.loadLevel(STATE.currentLevel + 1);
+  game.loadLevel(STATE.currentLevel + 1, false);
 });
 
 document.getElementById('retry-level-btn').addEventListener('click', () => {
   document.getElementById('gameover-screen').classList.remove('active');
-  game.loadLevel(STATE.currentLevel);
+  game.loadLevel(STATE.currentLevel, true);
 });
 
 document.getElementById('restart-game-btn').addEventListener('click', () => {
   document.getElementById('gameover-screen').classList.remove('active');
   document.getElementById('select-screen').classList.add('active');
+  STATE.spheres = 0;
+  STATE.levelStartSpheres = 0;
+  STATE.inventory.clear();
+  STATE.equipped = {};
+  STATE.currentLevel = 1;
+  const rstBtn = document.getElementById('restart-lvl-btn');
+  if (rstBtn) rstBtn.style.display = 'none';
 });
 
 document.getElementById('vic-replay-btn').addEventListener('click', () => {
   document.getElementById('victory-screen').classList.remove('active');
   document.getElementById('select-screen').classList.add('active');
   STATE.spheres = 0;
+  STATE.levelStartSpheres = 0;
   STATE.inventory.clear();
   STATE.equipped = {};
+  STATE.currentLevel = 1;
+  const rstBtn = document.getElementById('restart-lvl-btn');
+  if (rstBtn) rstBtn.style.display = 'none';
 });
 
 // ── MAIN LOOP ────────────────────────────────────────────────────────────────
