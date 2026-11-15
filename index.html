@@ -22,20 +22,25 @@
     html, body {
       width: 100%;
       height: 100%;
+      height: 100dvh;
       overflow: hidden;
       background-color: var(--bg);
       font-family: var(--font);
       color: #fff;
+      touch-action: none;
     }
     #game-container {
       position: relative;
       width: 100vw;
+      width: 100dvw;
       height: 100vh;
+      height: 100dvh;
       display: flex;
       align-items: center;
       justify-content: center;
       background: #000;
       overflow: hidden;
+      touch-action: none;
     }
     canvas#gameCanvas {
       display: block;
@@ -127,7 +132,63 @@
       gap: 16px;
       max-width: 860px;
       width: 100%;
-      margin-bottom: 22px;
+      margin-bottom: 18px;
+    }
+
+    /* Environment Speed Selector */
+    .env-speed-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      width: 100%;
+      max-width: 520px;
+    }
+    .env-speed-label {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .env-speed-buttons {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .speed-btn {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+      padding: 8px 18px;
+      color: #cbd5e1;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s ease-out;
+    }
+    .speed-btn:hover {
+      background: rgba(45, 55, 72, 0.9);
+      border-color: rgba(255, 255, 255, 0.35);
+      color: #fff;
+    }
+    .speed-btn.selected {
+      border-color: #f59e0b;
+      background: rgba(245, 158, 11, 0.18);
+      color: #fef08a;
+      box-shadow: 0 0 16px rgba(245, 158, 11, 0.3);
+    }
+    .speed-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
     }
     .dragon-card {
       background: rgba(30, 41, 59, 0.7);
@@ -405,10 +466,10 @@
 
     /* Mobile On-Screen Controls */
     #touch-controls {
-      position: absolute;
+      position: fixed;
       inset: 0;
       pointer-events: none;
-      z-index: 15;
+      z-index: 25;
       display: none;
     }
     .touch-btn {
@@ -417,7 +478,7 @@
       width: 68px;
       height: 68px;
       border-radius: 50%;
-      background: rgba(15, 23, 42, 0.6);
+      background: rgba(15, 23, 42, 0.65);
       border: 2px solid rgba(255, 255, 255, 0.45);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
@@ -438,7 +499,7 @@
       font-size: 10px;
       font-weight: 700;
       letter-spacing: 0.5px;
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba(255, 255, 255, 0.85);
       margin-top: 2px;
       text-transform: uppercase;
     }
@@ -447,31 +508,89 @@
       border-color: #f59e0b;
       transform: scale(0.92);
     }
-    #t-left { bottom: 25px; left: 24px; }
-    #t-right { bottom: 25px; left: 105px; }
+    #t-left {
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 38px);
+      left: calc(env(safe-area-inset-left, 0px) + 20px);
+    }
+    #t-right {
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 38px);
+      left: calc(env(safe-area-inset-left, 0px) + 100px);
+    }
     #t-jump {
-      bottom: 25px;
-      right: 24px;
-      width: 76px;
-      height: 76px;
-      background: rgba(59, 130, 246, 0.55);
-      border-color: rgba(96, 165, 250, 0.65);
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 38px);
+      right: calc(env(safe-area-inset-right, 0px) + 20px);
+      width: 74px;
+      height: 74px;
+      background: rgba(59, 130, 246, 0.6);
+      border-color: rgba(96, 165, 250, 0.7);
     }
     #t-jump:active, #t-jump.pressed {
       background: rgba(59, 130, 246, 0.9);
       border-color: #93c5fd;
     }
     #t-breath {
-      bottom: 35px;
-      right: 114px;
-      width: 68px;
-      height: 68px;
-      background: rgba(239, 68, 68, 0.55);
-      border-color: rgba(248, 113, 113, 0.65);
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 48px);
+      right: calc(env(safe-area-inset-right, 0px) + 106px);
+      width: 66px;
+      height: 66px;
+      background: rgba(239, 68, 68, 0.6);
+      border-color: rgba(248, 113, 113, 0.7);
     }
     #t-breath:active, #t-breath.pressed {
       background: rgba(239, 68, 68, 0.9);
       border-color: #fca5a5;
+    }
+
+    @media (orientation: portrait) {
+      #t-left {
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 55px);
+        left: calc(env(safe-area-inset-left, 0px) + 16px);
+      }
+      #t-right {
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 55px);
+        left: calc(env(safe-area-inset-left, 0px) + 94px);
+      }
+      #t-jump {
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 55px);
+        right: calc(env(safe-area-inset-right, 0px) + 16px);
+      }
+      #t-breath {
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 65px);
+        right: calc(env(safe-area-inset-right, 0px) + 98px);
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 500px) {
+      .touch-btn {
+        width: 60px;
+        height: 60px;
+      }
+      .touch-btn .btn-arrow {
+        font-size: 22px;
+      }
+      .touch-btn .btn-sub {
+        font-size: 9px;
+      }
+      #t-left {
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+        left: calc(env(safe-area-inset-left, 0px) + 18px);
+      }
+      #t-right {
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+        left: calc(env(safe-area-inset-left, 0px) + 88px);
+      }
+      #t-jump {
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+        right: calc(env(safe-area-inset-right, 0px) + 18px);
+        width: 66px;
+        height: 66px;
+      }
+      #t-breath {
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 32px);
+        right: calc(env(safe-area-inset-right, 0px) + 94px);
+        width: 60px;
+        height: 60px;
+      }
     }
 
     /* Helper info */
@@ -528,7 +647,7 @@
   <!-- Screen 1: Dragon Selection / Main Menu -->
   <div id="select-screen" class="screen-overlay active">
     <h1 class="game-title">Dragon's Utopia</h1>
-    <p class="subtitle">Choose your dragon champion to soar across the sky islands and protect the Dragon Realm!</p>
+    <p class="subtitle">Choose your dragon champion to soar across 5 fantastical realms and defend the Dragon Realm!</p>
 
     <div class="dragon-cards-container">
       <!-- Dragon 1: Ignis -->
@@ -556,6 +675,25 @@
       </div>
     </div>
 
+    <!-- Environment Speed Level Selector -->
+    <div class="env-speed-section">
+      <div class="env-speed-label">Environment Speed Level</div>
+      <div class="env-speed-buttons">
+        <button class="speed-btn" data-speed="low" id="speed-low">
+          <span class="speed-indicator" style="background: #10b981;"></span>
+          <span>Low (0.75x)</span>
+        </button>
+        <button class="speed-btn selected" data-speed="medium" id="speed-medium">
+          <span class="speed-indicator" style="background: #f59e0b;"></span>
+          <span>Medium (1.0x)</span>
+        </button>
+        <button class="speed-btn" data-speed="high" id="speed-high">
+          <span class="speed-indicator" style="background: #ef4444;"></span>
+          <span>High (1.35x)</span>
+        </button>
+      </div>
+    </div>
+
     <button class="btn" id="start-btn">Embark On Quest</button>
 
     <div class="controls-hint">
@@ -568,7 +706,7 @@
   <!-- Screen 2: Level Score Summary & Transition -->
   <div id="score-screen" class="screen-overlay">
     <h1 class="game-title" id="score-title">Level 1 Cleared!</h1>
-    <p class="subtitle" id="score-subtitle">Utopia restored in this sector. Here is your performance:</p>
+    <p class="subtitle" id="score-subtitle">Realm restored. Here is your performance:</p>
 
     <div class="score-stats-grid">
       <div class="stat-box">
@@ -584,8 +722,8 @@
         <div class="stat-val" id="stat-hearts">❤️❤️❤️</div>
       </div>
       <div class="stat-box">
-        <div class="stat-label">Total Spheres Bank</div>
-        <div class="stat-val" id="stat-bank">18 ✦</div>
+        <div class="stat-label">Environment Speed</div>
+        <div class="stat-val" id="stat-speed" style="font-size: 1.15rem; color: #f59e0b;">Medium (1.0x)</div>
       </div>
     </div>
 
@@ -628,7 +766,7 @@
   <!-- Screen 4: Game Over -->
   <div id="gameover-screen" class="screen-overlay">
     <h1 class="game-title" style="background: linear-gradient(135deg, #f87171, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Dragon Fallen</h1>
-    <p class="subtitle">The dwarf hunters overcame your dragon. Gather your strength and try again!</p>
+    <p class="subtitle">The monsters overwhelmed your dragon. Gather your strength and try again!</p>
     <div style="display: flex; gap: 14px; margin-top: 10px;">
       <button class="btn" id="retry-level-btn">Retry Level</button>
       <button class="btn btn-secondary" id="restart-game-btn">Main Menu</button>
@@ -638,19 +776,19 @@
   <!-- Screen 5: Victory Screen -->
   <div id="victory-screen" class="screen-overlay">
     <h1 class="game-title">Utopia Restored! 👑</h1>
-    <p class="subtitle">You conquered all 3 sectors and defeated the Hunter Warlord!</p>
+    <p class="subtitle">You conquered all 5 realms, crushed the Wasp Swarm, solved the Labyrinth, and defeated the Warlord!</p>
     <div class="score-stats-grid" style="max-width: 500px;">
       <div class="stat-box">
         <div class="stat-label">Total Time</div>
-        <div class="stat-val" id="vic-time">04:22</div>
+        <div class="stat-val" id="vic-time">05:42</div>
       </div>
       <div class="stat-box">
         <div class="stat-label">Spheres Harvested</div>
-        <div class="stat-val" id="vic-spheres">78 ✦</div>
+        <div class="stat-val" id="vic-spheres">120 ✦</div>
       </div>
       <div class="stat-box">
         <div class="stat-label">Items Unlocked</div>
-        <div class="stat-val" id="vic-items">5 / 8</div>
+        <div class="stat-val" id="vic-items">6 / 10</div>
       </div>
       <div class="stat-box">
         <div class="stat-label">Dragon Champion</div>
@@ -663,8 +801,7 @@
 
 <script>
 /**
- * DRAGON'S UTOPIA - COMPLETE GAME ENGINE
- * Single-file high-performance modern canvas platformer
+ * DRAGON'S UTOPIA - COMPLETE 5-REALM GAME ENGINE
  */
 'use strict';
 
@@ -839,6 +976,23 @@ class SoundFX {
     osc.start(t);
     osc.stop(t + 0.35);
   }
+  playShootArrow() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+    const t = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(800, t);
+    osc.frequency.exponentialRampToValueAtTime(200, t + 0.1);
+    gain.gain.setValueAtTime(0.15, t);
+    gain.gain.linearRampToValueAtTime(0.01, t + 0.1);
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start(t);
+    osc.stop(t + 0.1);
+  }
   playBuy() {
     if (!this.enabled) return;
     this.init();
@@ -889,7 +1043,8 @@ const SHOP_ITEMS = [
   { id: 'tail_ring', name: 'Tail Ring', icon: '💍', type: 'tail', cost: 8, desc: 'Solid gold tail ring forged in dragon fire.' },
   { id: 'tail_gem', name: 'Tail Crystal', icon: '🔮', type: 'tail', cost: 10, desc: 'Sharp azure power crystal mounted onto your tail spade.' },
   { id: 'gold_claws', name: 'Golden Claws', icon: '💅', type: 'claws', cost: 8, desc: 'Claws polished with molten golden lacquer.' },
-  { id: 'crimson_claws', name: 'Crimson Claws', icon: '🩸', type: 'claws', cost: 8, desc: 'Fierce ruby-red claw paint that shines in battle.' }
+  { id: 'crimson_claws', name: 'Crimson Claws', icon: '🩸', type: 'claws', cost: 8, desc: 'Fierce ruby-red claw paint that shines in battle.' },
+  { id: 'horn_guard', name: 'Horn Armor', icon: '⚔️', type: 'horns', cost: 14, desc: 'Reinforced golden horn blades for a fearsome silhouette.' }
 ];
 
 // ── DRAGON SPECIES DEFINITION ────────────────────────────────────────────────
@@ -944,11 +1099,20 @@ const DRAGON_TYPES = [
 // ── GLOBAL STATE ─────────────────────────────────────────────────────────────
 const STATE = {
   selectedDragon: 0,
+  envSpeed: 'medium',
+  envSpeedMult: 1.0,
   spheres: 0,
   inventory: new Set(),
   equipped: {},
   currentLevel: 1,
-  totalLevels: 3,
+  totalLevels: 5,
+  levelNames: [
+    'Sunlit Dragon Vale',
+    'Serpent Mire (Snake Mud)',
+    'Minotaur\'s Labyrinth',
+    'Wasp\'s Hell',
+    'The Dragon Citadel'
+  ],
   gameTime: 0,
   levelStartTime: 0,
   levelSpheresCollected: 0,
@@ -987,13 +1151,11 @@ document.getElementById('touch-toggle').addEventListener('click', () => {
   touchControlsEl.style.display = touchControlsVisible ? 'block' : 'none';
 });
 
-// ── DRAWING PROCEDURAL SPRITES ───────────────────────────────────────────────
+// ── PROCEDURAL SPRITES ───────────────────────────────────────────────────────
 function drawDragonSprite(targetCtx, x, y, dragonData, equippedCosmetics, facingRight, animTick, isHurt, isJumping) {
   targetCtx.save();
   targetCtx.translate(x, y);
-  if (!facingRight) {
-    targetCtx.scale(-1, 1);
-  }
+  if (!facingRight) targetCtx.scale(-1, 1);
 
   if (isHurt && Math.floor(animTick / 3) % 2 === 0) {
     targetCtx.globalAlpha = 0.4;
@@ -1045,13 +1207,11 @@ function drawDragonSprite(targetCtx, x, y, dragonData, equippedCosmetics, facing
   targetCtx.quadraticCurveTo(-18, 8 + tailSway, -32, -4 + tailSway);
   targetCtx.stroke();
 
-  // Tail Spade
   targetCtx.fillStyle = dragonData.wingColor;
   targetCtx.beginPath();
   targetCtx.arc(-32, -4 + tailSway, 7, 0, Math.PI * 2);
   targetCtx.fill();
 
-  // Tail Cosmetics
   if (equippedCosmetics.tail === 'tail_ring') {
     targetCtx.strokeStyle = '#f59e0b';
     targetCtx.lineWidth = 4;
@@ -1105,19 +1265,17 @@ function drawDragonSprite(targetCtx, x, y, dragonData, equippedCosmetics, facing
   targetCtx.ellipse(0, 0, 16, 13, 0.1, 0, Math.PI * 2);
   targetCtx.fill();
 
-  // Snout
   targetCtx.beginPath();
   targetCtx.ellipse(12, 3, 10, 8, 0, 0, Math.PI * 2);
   targetCtx.fill();
 
-  // Nostril
   targetCtx.fillStyle = 'rgba(0,0,0,0.4)';
   targetCtx.beginPath();
   targetCtx.arc(17, 2, 1.8, 0, Math.PI * 2);
   targetCtx.fill();
 
   // Horns
-  targetCtx.fillStyle = dragonData.hornColor;
+  targetCtx.fillStyle = (equippedCosmetics.horns === 'horn_guard') ? '#f59e0b' : dragonData.hornColor;
   targetCtx.beginPath();
   targetCtx.moveTo(-4, -10);
   targetCtx.quadraticCurveTo(-14, -26, -22, -22);
@@ -1243,7 +1401,7 @@ function drawDragonSprite(targetCtx, x, y, dragonData, equippedCosmetics, facing
 }
 
 /**
- * Draws Dwarf Warrior Dragon Hunter
+ * 1. Dwarf Warrior (Levels 1 & 5)
  */
 function drawDwarfHunter(ctx, x, y, facingRight, tick, isElite, isBoss) {
   ctx.save();
@@ -1254,30 +1412,25 @@ function drawDwarfHunter(ctx, x, y, facingRight, tick, isElite, isBoss) {
   const walkBob = Math.abs(Math.sin(tick * 0.25)) * 2.5;
   const swingArm = Math.sin(tick * 0.25) * 10;
 
-  // Shadow
   ctx.fillStyle = 'rgba(0,0,0,0.25)';
   ctx.beginPath();
   ctx.ellipse(0, 20, 16, 5, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  // Boots
   ctx.fillStyle = '#33271e';
   ctx.fillRect(-10, 13, 8, 8);
   ctx.fillRect(2, 13, 8, 8);
 
-  // Body / Tunic
   ctx.fillStyle = isBoss ? '#7f1d1d' : isElite ? '#1e293b' : '#78350f';
   ctx.beginPath();
   ctx.roundRect(-12, -2 + walkBob, 24, 16, 4);
   ctx.fill();
 
-  // Belt & Brass Buckle
   ctx.fillStyle = '#1c1917';
   ctx.fillRect(-12, 6 + walkBob, 24, 4);
   ctx.fillStyle = '#f59e0b';
   ctx.fillRect(-3, 5 + walkBob, 6, 6);
 
-  // Bushy Beard!
   ctx.fillStyle = isBoss ? '#450a0a' : isElite ? '#e2e8f0' : '#b45309';
   ctx.beginPath();
   ctx.moveTo(-10, -6 + walkBob);
@@ -1285,7 +1438,6 @@ function drawDwarfHunter(ctx, x, y, facingRight, tick, isElite, isBoss) {
   ctx.closePath();
   ctx.fill();
 
-  // Face & Nose
   ctx.fillStyle = '#fed7aa';
   ctx.beginPath();
   ctx.ellipse(0, -8 + walkBob, 9, 7, 0, 0, Math.PI * 2);
@@ -1295,7 +1447,6 @@ function drawDwarfHunter(ctx, x, y, facingRight, tick, isElite, isBoss) {
   ctx.arc(3, -7 + walkBob, 3.5, 0, Math.PI * 2);
   ctx.fill();
 
-  // Helmet
   ctx.fillStyle = isBoss ? '#991b1b' : isElite ? '#475569' : '#94a3b8';
   ctx.beginPath();
   ctx.arc(0, -11 + walkBob, 11, Math.PI, 0);
@@ -1304,7 +1455,6 @@ function drawDwarfHunter(ctx, x, y, facingRight, tick, isElite, isBoss) {
   ctx.fillStyle = isBoss ? '#fbbf24' : isElite ? '#f59e0b' : '#64748b';
   ctx.fillRect(-12, -12 + walkBob, 24, 4);
 
-  // Horns
   ctx.fillStyle = '#f1f5f9';
   ctx.beginPath();
   ctx.moveTo(-9, -12 + walkBob);
@@ -1317,14 +1467,12 @@ function drawDwarfHunter(ctx, x, y, facingRight, tick, isElite, isBoss) {
   ctx.quadraticCurveTo(11, -18 + walkBob, 7, -14 + walkBob);
   ctx.fill();
 
-  // Angry Eyes
   ctx.fillStyle = '#ef4444';
   ctx.beginPath();
   ctx.arc(1, -9 + walkBob, 1.8, 0, Math.PI * 2);
   ctx.arc(6, -9 + walkBob, 1.8, 0, Math.PI * 2);
   ctx.fill();
 
-  // Battle Axe
   ctx.save();
   ctx.translate(12, 2 + walkBob);
   ctx.rotate(swingArm * 0.05);
@@ -1339,7 +1487,6 @@ function drawDwarfHunter(ctx, x, y, facingRight, tick, isElite, isBoss) {
   ctx.fill();
   ctx.restore();
 
-  // Shield
   ctx.save();
   ctx.translate(-10, 2 + walkBob);
   ctx.fillStyle = isBoss ? '#450a0a' : isElite ? '#b91c1c' : '#0369a1';
@@ -1356,7 +1503,366 @@ function drawDwarfHunter(ctx, x, y, facingRight, tick, isElite, isBoss) {
 }
 
 /**
- * Draws Cute Sheep
+ * 2. Giant Slithering Snake (Level 2: Snake Mud)
+ */
+function drawSnake(ctx, x, y, facingRight, tick) {
+  ctx.save();
+  ctx.translate(x, y);
+  if (!facingRight) ctx.scale(-1, 1);
+
+  const slither = Math.sin(tick * 0.25) * 4;
+
+  // Shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.25)';
+  ctx.beginPath();
+  ctx.ellipse(0, 18, 20, 5, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Coiled Tail & Body Waves
+  ctx.strokeStyle = '#15803d';
+  ctx.lineWidth = 10;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(-22, 14);
+  ctx.quadraticCurveTo(-14, 8 + slither, -4, 14 - slither);
+  ctx.quadraticCurveTo(6, 18 + slither, 14, 10);
+  ctx.stroke();
+
+  // Yellow Diamond Belly Pattern
+  ctx.strokeStyle = '#fef08a';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(-18, 14);
+  ctx.lineTo(-6, 12 + slither);
+  ctx.lineTo(8, 14 - slither);
+  ctx.stroke();
+
+  // Hood & Reared-Up Neck
+  ctx.fillStyle = '#166534';
+  ctx.beginPath();
+  ctx.ellipse(12, -2, 10, 16, -0.2, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Cobra Head
+  ctx.beginPath();
+  ctx.ellipse(18, -12, 10, 7, 0.2, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Sinister Yellow Eye
+  ctx.fillStyle = '#fde047';
+  ctx.beginPath();
+  ctx.arc(20, -14, 2.5, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#000';
+  ctx.beginPath();
+  ctx.arc(21, -14, 1.2, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Flicking Forked Tongue
+  const tongueOut = (Math.sin(tick * 0.35) > 0.1);
+  if (tongueOut) {
+    ctx.strokeStyle = '#ef4444';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(27, -10);
+    ctx.lineTo(35, -10);
+    ctx.lineTo(38, -13);
+    ctx.moveTo(35, -10);
+    ctx.lineTo(38, -7);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+/**
+ * 3. Minotaur Warrior (Level 3: Minotaur's Labyrinth)
+ */
+function drawMinotaur(ctx, x, y, facingRight, tick) {
+  ctx.save();
+  ctx.translate(x, y);
+  if (!facingRight) ctx.scale(-1, 1);
+
+  const stomp = Math.abs(Math.sin(tick * 0.2)) * 3;
+
+  // Shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.3)';
+  ctx.beginPath();
+  ctx.ellipse(0, 20, 20, 6, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Hooves & Legs
+  ctx.fillStyle = '#1e1b4b';
+  ctx.fillRect(-12, 10, 9, 10);
+  ctx.fillRect(4, 10, 9, 10);
+
+  // Muscular Beast Torso
+  ctx.fillStyle = '#78350f';
+  ctx.beginPath();
+  ctx.roundRect(-16, -8 + stomp, 32, 22, 6);
+  ctx.fill();
+
+  // Leather Strap Across Chest
+  ctx.strokeStyle = '#451a03';
+  ctx.lineWidth = 3.5;
+  ctx.beginPath();
+  ctx.moveTo(-14, -6 + stomp);
+  ctx.lineTo(14, 10 + stomp);
+  ctx.stroke();
+
+  // Bull Head
+  ctx.fillStyle = '#572607';
+  ctx.beginPath();
+  ctx.ellipse(2, -16 + stomp, 13, 11, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Big Snout & Golden Nose Ring
+  ctx.fillStyle = '#451a03';
+  ctx.beginPath();
+  ctx.ellipse(9, -12 + stomp, 8, 6, 0.1, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.arc(14, -10 + stomp, 3.5, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Sharp Curved Horns
+  ctx.fillStyle = '#f1f5f9';
+  ctx.beginPath();
+  ctx.moveTo(-6, -22 + stomp);
+  ctx.quadraticCurveTo(-18, -36 + stomp, -4, -38 + stomp);
+  ctx.quadraticCurveTo(-8, -26 + stomp, -2, -22 + stomp);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(6, -22 + stomp);
+  ctx.quadraticCurveTo(18, -36 + stomp, 4, -38 + stomp);
+  ctx.quadraticCurveTo(8, -26 + stomp, 2, -22 + stomp);
+  ctx.fill();
+
+  // Glowing Red Glare
+  ctx.fillStyle = '#ef4444';
+  ctx.beginPath();
+  ctx.arc(5, -18 + stomp, 2.2, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Heavy Spiked Battle Club
+  ctx.save();
+  ctx.translate(16, 2 + stomp);
+  ctx.rotate(0.2 + Math.sin(tick * 0.2) * 0.15);
+  ctx.fillStyle = '#292524';
+  ctx.fillRect(-3, -24, 6, 32);
+  ctx.fillStyle = '#78716c';
+  ctx.beginPath();
+  ctx.arc(0, -22, 10, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#f59e0b';
+  [-28, -22, -16].forEach(py => {
+    ctx.fillRect(8, py, 4, 3);
+    ctx.fillRect(-12, py, 4, 3);
+  });
+  ctx.restore();
+
+  ctx.restore();
+}
+
+/**
+ * 4. Medusa Archer (Level 3: Minotaur's Labyrinth - Shoots Arrows)
+ */
+function drawMedusa(ctx, x, y, facingRight, tick) {
+  ctx.save();
+  ctx.translate(x, y);
+  if (!facingRight) ctx.scale(-1, 1);
+
+  const bob = Math.sin(tick * 0.2) * 2;
+
+  // Shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.25)';
+  ctx.beginPath();
+  ctx.ellipse(0, 20, 18, 5, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Serpentine Tail Bottom
+  ctx.strokeStyle = '#047857';
+  ctx.lineWidth = 11;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(-18, 16);
+  ctx.quadraticCurveTo(-6, 8, 4, 16);
+  ctx.stroke();
+
+  // Upper Body & Tunic
+  ctx.fillStyle = '#065f46';
+  ctx.beginPath();
+  ctx.roundRect(-8, -4 + bob, 16, 18, 4);
+  ctx.fill();
+
+  // Face
+  ctx.fillStyle = '#a7f3d0';
+  ctx.beginPath();
+  ctx.ellipse(2, -14 + bob, 7, 9, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Glowing Venom Eyes
+  ctx.fillStyle = '#eab308';
+  ctx.beginPath();
+  ctx.arc(4, -14 + bob, 2.2, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Wriggling Snake Hair!
+  ctx.strokeStyle = '#10b981';
+  ctx.lineWidth = 2.5;
+  for (let s = 0; s < 5; s++) {
+    const swAngle = Math.sin(tick * 0.3 + s) * 4;
+    ctx.beginPath();
+    ctx.moveTo(-2 + s * 2, -21 + bob);
+    ctx.quadraticCurveTo(-10 + s * 5, -28 + swAngle + bob, -4 + s * 4, -33 + bob);
+    ctx.stroke();
+  }
+
+  // Recurve Bow in Hand
+  ctx.strokeStyle = '#78350f';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.arc(14, -4 + bob, 14, -1.2, 1.2);
+  ctx.stroke();
+  // Bowstring
+  ctx.strokeStyle = '#cbd5e1';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(19, -16 + bob);
+  ctx.lineTo(8, -4 + bob);
+  ctx.lineTo(19, 8 + bob);
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+/**
+ * 5. Wasp (Level 4: Wasp's Hell - Fast & Shoots Stings)
+ */
+function drawWasp(ctx, x, y, facingRight, tick) {
+  ctx.save();
+  ctx.translate(x, y);
+  if (!facingRight) ctx.scale(-1, 1);
+
+  const hoverY = Math.sin(tick * 0.3) * 3;
+  const wingAngle = Math.sin(tick * 0.9) * 0.55;
+
+  // Rapid Fluttering Wings
+  ctx.fillStyle = 'rgba(147, 197, 253, 0.65)';
+  ctx.strokeStyle = '#93c5fd';
+  ctx.lineWidth = 1;
+  ctx.save();
+  ctx.translate(-2, -10 + hoverY);
+  ctx.rotate(-0.4 + wingAngle);
+  ctx.beginPath();
+  ctx.ellipse(0, -10, 6, 16, 0.2, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+
+  ctx.save();
+  ctx.translate(4, -10 + hoverY);
+  ctx.rotate(0.3 - wingAngle);
+  ctx.beginPath();
+  ctx.ellipse(0, -10, 5, 14, -0.2, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+
+  // Black Head & Big Red Compound Eyes
+  ctx.fillStyle = '#0f172a';
+  ctx.beginPath();
+  ctx.arc(12, -2 + hoverY, 6, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#ef4444';
+  ctx.beginPath();
+  ctx.arc(14, -3 + hoverY, 3, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Curved Antennae
+  ctx.strokeStyle = '#0f172a';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(14, -6 + hoverY);
+  ctx.quadraticCurveTo(18, -14 + hoverY, 22, -12 + hoverY);
+  ctx.stroke();
+
+  // Thorax
+  ctx.fillStyle = '#451a03';
+  ctx.beginPath();
+  ctx.ellipse(2, 0 + hoverY, 7, 6, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Striped Yellow/Black Abdomen
+  ctx.save();
+  ctx.translate(-10, 4 + hoverY);
+  ctx.rotate(0.3);
+  ctx.fillStyle = '#f59e0b';
+  ctx.beginPath();
+  ctx.ellipse(0, 0, 12, 7, 0, 0, Math.PI * 2);
+  ctx.fill();
+  // Black stripes
+  ctx.fillStyle = '#0f172a';
+  ctx.fillRect(-6, -6, 3, 12);
+  ctx.fillRect(-1, -7, 3, 14);
+  ctx.fillRect(4, -6, 3, 12);
+
+  // Sharp Stinger Tip!
+  ctx.fillStyle = '#1c1917';
+  ctx.beginPath();
+  ctx.moveTo(-12, 0);
+  ctx.lineTo(-18, 1);
+  ctx.lineTo(-12, 2);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+  ctx.restore();
+}
+
+/**
+ * Enemy Projectiles (Medusa Arrow & Wasp Stinger Dart)
+ */
+function drawEnemyProjectile(ctx, proj) {
+  ctx.save();
+  ctx.translate(proj.x, proj.y);
+
+  if (proj.type === 'arrow') {
+    const dir = proj.vx >= 0 ? 1 : -1;
+    ctx.scale(dir, 1);
+    ctx.fillStyle = '#78350f';
+    ctx.fillRect(-16, -1.5, 24, 3);
+    // Stone Arrowhead
+    ctx.fillStyle = '#94a3b8';
+    ctx.beginPath();
+    ctx.moveTo(8, -4);
+    ctx.lineTo(16, 0);
+    ctx.lineTo(8, 4);
+    ctx.closePath();
+    ctx.fill();
+    // Fletching
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillRect(-16, -3, 6, 6);
+  } else if (proj.type === 'sting') {
+    // Glowing Wasp Stinger Needle
+    const grad = ctx.createRadialGradient(0, 0, 1, 0, 0, 8);
+    grad.addColorStop(0, '#ffffff');
+    grad.addColorStop(0.4, '#f59e0b');
+    grad.addColorStop(1, 'rgba(239, 68, 68, 0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(0, 0, 8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fbbf24';
+    ctx.fillRect(-6, -1.5, 12, 3);
+  }
+  ctx.restore();
+}
+
+/**
+ * Cute Sheep
  */
 function drawSheep(ctx, x, y, facingRight, tick) {
   ctx.save();
@@ -1366,14 +1872,12 @@ function drawSheep(ctx, x, y, facingRight, tick) {
   const bob = Math.sin(tick * 0.15) * 2;
   const chew = Math.sin(tick * 0.3) * 1.5;
 
-  // Legs
   ctx.fillStyle = '#1e293b';
   ctx.fillRect(-10, 8, 4, 10);
   ctx.fillRect(-2, 8, 4, 10);
   ctx.fillRect(4, 8, 4, 10);
   ctx.fillRect(10, 8, 4, 10);
 
-  // Wool Body
   ctx.fillStyle = '#f8fafc';
   const puffs = [
     [-8, 0, 10], [0, -3, 11], [8, 0, 10],
@@ -1385,19 +1889,16 @@ function drawSheep(ctx, x, y, facingRight, tick) {
     ctx.fill();
   });
 
-  // Sheep Head
   ctx.fillStyle = '#1e293b';
   ctx.beginPath();
   ctx.ellipse(14, -2 + bob + chew, 8, 6, 0.2, 0, Math.PI * 2);
   ctx.fill();
 
-  // Sheep Ears
   ctx.fillStyle = '#f472b6';
   ctx.beginPath();
   ctx.ellipse(11, -7 + bob, 3, 5, -0.6, 0, Math.PI * 2);
   ctx.fill();
 
-  // Eye
   ctx.fillStyle = '#ffffff';
   ctx.beginPath();
   ctx.arc(15, -4 + bob, 2.2, 0, Math.PI * 2);
@@ -1407,7 +1908,6 @@ function drawSheep(ctx, x, y, facingRight, tick) {
   ctx.arc(16, -4 + bob, 1.2, 0, Math.PI * 2);
   ctx.fill();
 
-  // Heart indicator
   ctx.fillStyle = '#f43f5e';
   ctx.font = '10px sans-serif';
   ctx.fillText('❤', -2, -18 + bob);
@@ -1416,7 +1916,7 @@ function drawSheep(ctx, x, y, facingRight, tick) {
 }
 
 /**
- * Draws Glowing Energy Sphere
+ * Energy Sphere
  */
 function drawSphere(ctx, x, y, tick) {
   ctx.save();
@@ -1449,12 +1949,11 @@ function drawSphere(ctx, x, y, tick) {
 }
 
 /**
- * Draws Spike Trap
+ * Traps (Spikes & Fire Vents)
  */
 function drawSpikes(ctx, x, y, w) {
   ctx.save();
   ctx.translate(x, y);
-
   const spikeCount = Math.floor(w / 14);
   const step = w / spikeCount;
 
@@ -1480,13 +1979,9 @@ function drawSpikes(ctx, x, y, w) {
   ctx.restore();
 }
 
-/**
- * Draws Fire Geyser Trap
- */
 function drawFireVent(ctx, x, y, active, tick) {
   ctx.save();
   ctx.translate(x, y);
-
   ctx.fillStyle = '#475569';
   ctx.fillRect(-14, -6, 28, 8);
   ctx.fillStyle = '#f59e0b';
@@ -1511,9 +2006,6 @@ function drawFireVent(ctx, x, y, active, tick) {
   ctx.restore();
 }
 
-/**
- * Draws Level Finish Gateway / Shrine
- */
 function drawLevelGoal(ctx, x, y, tick) {
   ctx.save();
   ctx.translate(x, y);
@@ -1546,10 +2038,10 @@ function drawLevelGoal(ctx, x, y, tick) {
   ctx.restore();
 }
 
-// ── LEVEL GENERATOR & DATA ──────────────────────────────────────────────────
+// ── 5 DISTINCT LEVEL DATA ────────────────────────────────────────────────────
 function buildLevel(levelNum) {
   const platforms = [];
-  const hunters = [];
+  const enemies = [];
   const sheep = [];
   const spheres = [];
   const spikes = [];
@@ -1557,6 +2049,7 @@ function buildLevel(levelNum) {
   let goalX = 3500;
 
   if (levelNum === 1) {
+    // LEVEL 1: Sunlit Dragon Vale (Dwarf Hunters)
     goalX = 3500;
     platforms.push({ x: -200, y: 440, w: 900, h: 100 });
     platforms.push({ x: 800, y: 390, w: 260, h: 40 });
@@ -1568,71 +2061,141 @@ function buildLevel(levelNum) {
     platforms.push({ x: 2980, y: 350, w: 240, h: 40 });
     platforms.push({ x: 3300, y: 430, w: 500, h: 90 });
 
-    [
-      200, 300, 400, 500, 850, 920, 990, 1200, 1270, 1340,
-      1600, 1680, 1750, 2000, 2080, 2300, 2380, 2650, 2730,
-      3040, 3110, 3380
-    ].forEach(sx => {
+    [200, 300, 400, 500, 850, 920, 990, 1200, 1270, 1340, 1600, 1680, 1750, 2000, 2080, 2300, 2380, 2650, 2730, 3040, 3110, 3380].forEach(sx => {
       const plat = platforms.find(p => sx >= p.x && sx <= p.x + p.w);
       const sy = plat ? plat.y - 35 : 350;
       spheres.push({ x: sx, y: sy, collected: false });
     });
 
-    hunters.push(
-      { x: 1250, y: 340, minX: 1150, maxX: 1400, vx: 1.5, hp: 1, isElite: false },
-      { x: 1680, y: 430, minX: 1520, maxX: 1820, vx: -1.6, hp: 1, isElite: false },
-      { x: 2350, y: 310, minX: 2260, maxX: 2480, vx: 1.5, hp: 1, isElite: false },
-      { x: 2720, y: 420, minX: 2600, maxX: 2880, vx: -1.8, hp: 1, isElite: false },
-      { x: 3080, y: 350, minX: 2990, maxX: 3200, vx: 1.5, hp: 1, isElite: false }
+    enemies.push(
+      { type: 'dwarf', x: 1250, y: 340, minX: 1150, maxX: 1400, vx: 1.5, hp: 1 },
+      { type: 'dwarf', x: 1680, y: 430, minX: 1520, maxX: 1820, vx: -1.6, hp: 1 },
+      { type: 'dwarf', x: 2350, y: 310, minX: 2260, maxX: 2480, vx: 1.5, hp: 1 },
+      { type: 'dwarf', x: 2720, y: 420, minX: 2600, maxX: 2880, vx: -1.8, hp: 1 },
+      { type: 'dwarf', x: 3080, y: 350, minX: 2990, maxX: 3200, vx: 1.5, hp: 1 }
     );
 
     sheep.push(
       { x: 450, y: 440, minX: 380, maxX: 620, vx: 0.8, eaten: false },
       { x: 1720, y: 430, minX: 1650, maxX: 1820, vx: -0.7, eaten: false }
     );
-
     spikes.push({ x: 1600, y: 430, w: 60 });
 
   } else if (levelNum === 2) {
-    goalX = 4200;
+    // LEVEL 2: Snake Mud (Serpent Mire) - Slithering Snakes
+    goalX = 3800;
     platforms.push({ x: -200, y: 440, w: 750, h: 100 });
-    platforms.push({ x: 650, y: 380, w: 220, h: 40 });
-    platforms.push({ x: 960, y: 340, w: 180, h: 35, moveX: true, originX: 960, range: 140, speed: 1.2 });
-    platforms.push({ x: 1380, y: 420, w: 320, h: 70 });
-    platforms.push({ x: 1800, y: 320, w: 180, h: 35, moveY: true, originY: 320, range: 80, speed: 1.4 });
-    platforms.push({ x: 2100, y: 380, w: 260, h: 40 });
-    platforms.push({ x: 2460, y: 330, w: 240, h: 40 });
-    platforms.push({ x: 2800, y: 430, w: 340, h: 70 });
-    platforms.push({ x: 3240, y: 360, w: 200, h: 35, moveX: true, originX: 3240, range: 120, speed: 1.5 });
-    platforms.push({ x: 3650, y: 310, w: 260, h: 40 });
-    platforms.push({ x: 4000, y: 440, w: 500, h: 90 });
+    platforms.push({ x: 660, y: 390, w: 260, h: 40 });
+    platforms.push({ x: 1020, y: 340, w: 280, h: 40 });
+    platforms.push({ x: 1400, y: 420, w: 340, h: 70 });
+    platforms.push({ x: 1840, y: 350, w: 250, h: 40 });
+    platforms.push({ x: 2180, y: 300, w: 260, h: 40 });
+    platforms.push({ x: 2540, y: 400, w: 320, h: 70 });
+    platforms.push({ x: 2960, y: 340, w: 240, h: 40 });
+    platforms.push({ x: 3300, y: 430, w: 600, h: 90 });
 
-    for (let sx = 200; sx < 4150; sx += 140) {
+    for (let sx = 180; sx < 3750; sx += 130) {
       const plat = platforms.find(p => sx >= p.x && sx <= p.x + p.w);
       const sy = plat ? plat.y - 36 : 320;
       spheres.push({ x: sx, y: sy, collected: false });
     }
 
-    hunters.push(
-      { x: 740, y: 380, minX: 660, maxX: 850, vx: 1.6, hp: 1, isElite: false },
-      { x: 1500, y: 420, minX: 1400, maxX: 1680, vx: -1.8, hp: 2, isElite: true },
-      { x: 2200, y: 380, minX: 2120, maxX: 2340, vx: 1.7, hp: 1, isElite: false },
-      { x: 2560, y: 330, minX: 2470, maxX: 2680, vx: -1.7, hp: 2, isElite: true },
-      { x: 2950, y: 430, minX: 2820, maxX: 3120, vx: 2.0, hp: 2, isElite: true },
-      { x: 3750, y: 310, minX: 3660, maxX: 3890, vx: -1.8, hp: 1, isElite: false }
+    // Snakes instead of dwarfs!
+    enemies.push(
+      { type: 'snake', x: 760, y: 390, minX: 680, maxX: 900, vx: 1.6, hp: 1 },
+      { type: 'snake', x: 1150, y: 340, minX: 1040, maxX: 1280, vx: -1.7, hp: 1 },
+      { type: 'snake', x: 1550, y: 420, minX: 1420, maxX: 1720, vx: 1.8, hp: 1 },
+      { type: 'snake', x: 1950, y: 350, minX: 1860, maxX: 2060, vx: -1.8, hp: 1 },
+      { type: 'snake', x: 2300, y: 300, minX: 2200, maxX: 2420, vx: 1.7, hp: 1 },
+      { type: 'snake', x: 2700, y: 400, minX: 2560, maxX: 2840, vx: -1.9, hp: 1 },
+      { type: 'snake', x: 3060, y: 340, minX: 2980, maxX: 3180, vx: 1.8, hp: 1 }
     );
 
     sheep.push(
-      { x: 400, y: 440, minX: 300, maxX: 500, vx: 0.8, eaten: false },
-      { x: 2980, y: 430, minX: 2850, maxX: 3100, vx: -0.7, eaten: false }
+      { x: 420, y: 440, minX: 320, maxX: 540, vx: 0.8, eaten: false },
+      { x: 2650, y: 400, minX: 2560, maxX: 2820, vx: -0.7, eaten: false }
+    );
+    spikes.push({ x: 1500, y: 420, w: 60 });
+    spikes.push({ x: 2720, y: 400, w: 70 });
+
+  } else if (levelNum === 3) {
+    // LEVEL 3: Minotaur's Labyrinth - Minotaurs & Medusa Archers
+    goalX = 4200;
+    platforms.push({ x: -200, y: 440, w: 700, h: 100 });
+    platforms.push({ x: 600, y: 380, w: 240, h: 40 });
+    platforms.push({ x: 940, y: 320, w: 200, h: 35, moveX: true, originX: 940, range: 130, speed: 1.3 });
+    platforms.push({ x: 1360, y: 420, w: 320, h: 70 });
+    platforms.push({ x: 1780, y: 310, w: 220, h: 40 });
+    platforms.push({ x: 2100, y: 380, w: 280, h: 40 });
+    platforms.push({ x: 2480, y: 320, w: 220, h: 35, moveY: true, originY: 320, range: 75, speed: 1.5 });
+    platforms.push({ x: 2820, y: 420, w: 340, h: 70 });
+    platforms.push({ x: 3260, y: 350, w: 260, h: 40 });
+    platforms.push({ x: 3620, y: 300, w: 240, h: 40 });
+    platforms.push({ x: 3960, y: 440, w: 500, h: 90 });
+
+    for (let sx = 180; sx < 4150; sx += 135) {
+      const plat = platforms.find(p => sx >= p.x && sx <= p.x + p.w);
+      const sy = plat ? plat.y - 36 : 310;
+      spheres.push({ x: sx, y: sy, collected: false });
+    }
+
+    // Minotaurs (2 HP) & Medusas (Shoot arrows)
+    enemies.push(
+      { type: 'minotaur', x: 720, y: 380, minX: 620, maxX: 820, vx: 1.7, hp: 2 },
+      { type: 'medusa', x: 1480, y: 420, minX: 1380, maxX: 1640, vx: -1.2, hp: 1, shootCooldown: 60 },
+      { type: 'minotaur', x: 1880, y: 310, minX: 1800, maxX: 1980, vx: 1.8, hp: 2 },
+      { type: 'medusa', x: 2220, y: 380, minX: 2120, maxX: 2360, vx: 1.3, hp: 1, shootCooldown: 80 },
+      { type: 'minotaur', x: 2980, y: 420, minX: 2840, maxX: 3120, vx: -2.0, hp: 2 },
+      { type: 'medusa', x: 3380, y: 350, minX: 3280, maxX: 3500, vx: -1.2, hp: 1, shootCooldown: 50 },
+      { type: 'minotaur', x: 3740, y: 300, minX: 3640, maxX: 3840, vx: 1.8, hp: 2 }
     );
 
-    spikes.push({ x: 1480, y: 420, w: 50 });
-    spikes.push({ x: 2900, y: 430, w: 60 });
-    vents.push({ x: 2280, y: 380, active: false, timer: 0 });
-    vents.push({ x: 3800, y: 310, active: false, timer: 60 });
+    sheep.push(
+      { x: 380, y: 440, minX: 300, maxX: 500, vx: 0.8, eaten: false },
+      { x: 2950, y: 420, minX: 2840, maxX: 3100, vx: -0.7, eaten: false }
+    );
+    spikes.push({ x: 1460, y: 420, w: 60 });
+    spikes.push({ x: 2900, y: 420, w: 70 });
+
+  } else if (levelNum === 4) {
+    // LEVEL 4: Wasp's Hell - Fast Buzzing Wasps that shoot stings
+    goalX = 4400;
+    platforms.push({ x: -200, y: 440, w: 700, h: 100 });
+    platforms.push({ x: 620, y: 380, w: 220, h: 40 });
+    platforms.push({ x: 940, y: 330, w: 200, h: 35, moveX: true, originX: 940, range: 140, speed: 1.7 });
+    platforms.push({ x: 1350, y: 420, w: 320, h: 70 });
+    platforms.push({ x: 1780, y: 320, w: 200, h: 35, moveY: true, originY: 320, range: 85, speed: 1.8 });
+    platforms.push({ x: 2080, y: 380, w: 260, h: 40 });
+    platforms.push({ x: 2440, y: 310, w: 240, h: 40 });
+    platforms.push({ x: 2800, y: 410, w: 340, h: 70 });
+    platforms.push({ x: 3240, y: 340, w: 220, h: 35, moveX: true, originX: 3240, range: 130, speed: 1.9 });
+    platforms.push({ x: 3660, y: 290, w: 260, h: 40 });
+    platforms.push({ x: 4020, y: 430, w: 550, h: 90 });
+
+    for (let sx = 180; sx < 4350; sx += 130) {
+      const plat = platforms.find(p => sx >= p.x && sx <= p.x + p.w);
+      const sy = plat ? plat.y - 36 : 300;
+      spheres.push({ x: sx, y: sy, collected: false });
+    }
+
+    // Wasps (Fast + Shoot Stings)
+    enemies.push(
+      { type: 'wasp', x: 720, y: 350, minX: 630, maxX: 820, vx: 2.5, hp: 1, shootCooldown: 40 },
+      { type: 'wasp', x: 1480, y: 390, minX: 1360, maxX: 1640, vx: -2.6, hp: 1, shootCooldown: 60 },
+      { type: 'wasp', x: 2180, y: 350, minX: 2090, maxX: 2320, vx: 2.7, hp: 1, shootCooldown: 50 },
+      { type: 'wasp', x: 2540, y: 280, minX: 2450, maxX: 2660, vx: -2.6, hp: 1, shootCooldown: 70 },
+      { type: 'wasp', x: 2950, y: 380, minX: 2820, maxX: 3120, vx: 2.8, hp: 1, shootCooldown: 45 },
+      { type: 'wasp', x: 3760, y: 260, minX: 3670, maxX: 3900, vx: -2.8, hp: 1, shootCooldown: 55 }
+    );
+
+    sheep.push({ x: 1420, y: 420, minX: 1360, maxX: 1540, vx: 0.8, eaten: false });
+    vents.push({ x: 2200, y: 380, active: false, timer: 0 });
+    vents.push({ x: 2950, y: 410, active: false, timer: 40 });
+    vents.push({ x: 3800, y: 290, active: false, timer: 70 });
+    spikes.push({ x: 2860, y: 410, w: 70 });
 
   } else {
+    // LEVEL 5: The Dragon Citadel - Grand Finale & Warlord Boss
     goalX = 4600;
     platforms.push({ x: -200, y: 440, w: 650, h: 100 });
     platforms.push({ x: 550, y: 380, w: 200, h: 35 });
@@ -1653,18 +2216,18 @@ function buildLevel(levelNum) {
       spheres.push({ x: sx, y: sy, collected: false });
     }
 
-    hunters.push(
-      { x: 620, y: 380, minX: 560, maxX: 730, vx: 1.8, hp: 1, isElite: false },
-      { x: 1200, y: 430, minX: 1120, maxX: 1360, vx: -2.0, hp: 2, isElite: true },
-      { x: 1980, y: 310, minX: 1890, maxX: 2100, vx: 1.8, hp: 2, isElite: true },
-      { x: 2320, y: 420, minX: 2220, maxX: 2500, vx: -2.0, hp: 2, isElite: true },
-      { x: 3000, y: 290, minX: 2920, maxX: 3120, vx: 2.2, hp: 2, isElite: true },
-      { x: 3320, y: 390, minX: 3250, maxX: 3440, vx: -2.0, hp: 2, isElite: true },
-      { x: 4250, y: 440, minX: 4050, maxX: 4450, vx: 2.5, hp: 4, isElite: true, isBoss: true }
+    enemies.push(
+      { type: 'dwarf', x: 620, y: 380, minX: 560, maxX: 730, vx: 1.8, hp: 1 },
+      { type: 'minotaur', x: 1200, y: 430, minX: 1120, maxX: 1360, vx: -2.0, hp: 2 },
+      { type: 'medusa', x: 1980, y: 310, minX: 1890, maxX: 2100, vx: 1.5, hp: 1, shootCooldown: 50 },
+      { type: 'wasp', x: 2320, y: 380, minX: 2220, maxX: 2500, vx: -2.6, hp: 1, shootCooldown: 40 },
+      { type: 'minotaur', x: 3000, y: 290, minX: 2920, maxX: 3120, vx: 2.2, hp: 2 },
+      { type: 'dwarf', x: 3320, y: 390, minX: 3250, maxX: 3440, vx: -2.0, hp: 2, isElite: true },
+      // Boss
+      { type: 'dwarf', x: 4250, y: 440, minX: 4050, maxX: 4450, vx: 2.5, hp: 4, isElite: true, isBoss: true }
     );
 
     sheep.push({ x: 1250, y: 430, minX: 1150, maxX: 1350, vx: 0.8, eaten: false });
-
     spikes.push({ x: 1180, y: 430, w: 60 });
     spikes.push({ x: 2320, y: 420, w: 80 });
     vents.push({ x: 2000, y: 310, active: false, timer: 0 });
@@ -1672,14 +2235,14 @@ function buildLevel(levelNum) {
     vents.push({ x: 4180, y: 440, active: false, timer: 20 });
   }
 
-  return { platforms, hunters, sheep, spheres, spikes, vents, goalX };
+  return { platforms, enemies, sheep, spheres, spikes, vents, goalX };
 }
 
 // ── GAME CONTROLLER & PHYSICS ────────────────────────────────────────────────
 class Game {
   constructor() {
     this.dragonData = DRAGON_TYPES[0];
-    this.levelData = buildLevel(1); // Pre-initialize level data safely
+    this.levelData = buildLevel(1);
 
     this.x = 80;
     this.y = 380;
@@ -1694,7 +2257,8 @@ class Game {
     this.lastSafeY = 380;
 
     this.breathCooldown = 0;
-    this.projectiles = [];
+    this.projectiles = [];       // Player fireballs
+    this.enemyProjectiles = [];  // Arrows & Stings
 
     this.camX = 0;
     this.camY = 0;
@@ -1781,6 +2345,7 @@ class Game {
     this.invulnerableTimer = 0;
     this.breathCooldown = 0;
     this.projectiles = [];
+    this.enemyProjectiles = [];
     this.particles = [];
     this.popups = [];
     this.camX = 0;
@@ -1947,14 +2512,17 @@ class Game {
       document.getElementById('vic-time').innerText = timeFormatted;
       document.getElementById('vic-spheres').innerText = `${STATE.spheres} ✦`;
       document.getElementById('vic-items').innerText = `${STATE.inventory.size} / ${SHOP_ITEMS.length}`;
-      document.getElementById('vic-champ').innerText = this.dragonData.name;
+      document.getElementById('vic-champ').innerText = `${this.dragonData.name} (${STATE.envSpeed.toUpperCase()})`;
       document.getElementById('victory-screen').classList.add('active');
     } else {
-      document.getElementById('score-title').innerText = `Level ${STATE.currentLevel} Cleared!`;
+      const levelTitle = STATE.levelNames[STATE.currentLevel - 1];
+      document.getElementById('score-title').innerText = `${levelTitle} Cleared!`;
       document.getElementById('stat-time').innerText = timeFormatted;
       document.getElementById('stat-spheres').innerText = `${STATE.levelSpheresCollected} / ${STATE.levelSpheresTotal}`;
       document.getElementById('stat-hearts').innerText = '❤️'.repeat(this.hearts);
-      document.getElementById('stat-bank').innerText = `${STATE.spheres} ✦`;
+      const speedName = (STATE.envSpeed === 'low') ? 'Low (0.75x)' :
+                        (STATE.envSpeed === 'high') ? 'High (1.35x)' : 'Medium (1.0x)';
+      document.getElementById('stat-speed').innerText = speedName;
       document.getElementById('score-screen').classList.add('active');
     }
   }
@@ -1962,6 +2530,8 @@ class Game {
   update() {
     if (!this.isRunning || !this.levelData) return;
     this.tick++;
+
+    const envMult = STATE.envSpeedMult || 1.0;
 
     if (this.invulnerableTimer > 0) this.invulnerableTimer--;
     if (this.breathCooldown > 0) this.breathCooldown--;
@@ -2012,13 +2582,13 @@ class Game {
     this.x += this.vx;
     this.y += this.vy;
 
-    // ── 2. MOVING PLATFORMS ──
+    // ── 2. MOVING PLATFORMS (Environment Speed Scaled) ──
     for (const p of this.levelData.platforms) {
       if (p.moveX) {
-        p.x = p.originX + Math.sin(this.tick * 0.02 * p.speed) * p.range;
+        p.x = p.originX + Math.sin(this.tick * 0.02 * p.speed * envMult) * p.range;
       }
       if (p.moveY) {
-        p.y = p.originY + Math.sin(this.tick * 0.025 * p.speed) * p.range;
+        p.y = p.originY + Math.sin(this.tick * 0.025 * p.speed * envMult) * p.range;
       }
     }
 
@@ -2040,7 +2610,7 @@ class Game {
         this.onGround = true;
 
         if (p.moveX) {
-          const platVx = Math.cos(this.tick * 0.02 * p.speed) * (p.range * 0.02 * p.speed);
+          const platVx = Math.cos(this.tick * 0.02 * p.speed * envMult) * (p.range * 0.02 * p.speed * envMult);
           this.x += platVx;
         }
 
@@ -2056,7 +2626,7 @@ class Game {
       this.respawnFromPit();
     }
 
-    // ── 5. PROJECTILES ──
+    // ── 5. PLAYER PROJECTILES (FIREBALLS) ──
     for (let i = this.projectiles.length - 1; i >= 0; i--) {
       const proj = this.projectiles[i];
       proj.x += proj.vx;
@@ -2073,38 +2643,68 @@ class Game {
       });
 
       let hit = false;
-      for (let hIdx = this.levelData.hunters.length - 1; hIdx >= 0; hIdx--) {
-        const h = this.levelData.hunters[hIdx];
-        const dist = Math.hypot(proj.x - h.x, proj.y - (h.y - 6));
+
+      // Check hit against enemy projectiles
+      for (let epIdx = this.enemyProjectiles.length - 1; epIdx >= 0; epIdx--) {
+        const ep = this.enemyProjectiles[epIdx];
+        if (Math.hypot(proj.x - ep.x, proj.y - ep.y) < proj.r + ep.r + 6) {
+          this.enemyProjectiles.splice(epIdx, 1);
+          hit = true;
+          sfx.playExplode();
+          for (let p = 0; p < 6; p++) {
+            this.particles.push({
+              x: ep.x,
+              y: ep.y,
+              vx: (Math.random() - 0.5) * 4,
+              vy: (Math.random() - 0.5) * 4,
+              r: 3,
+              color: '#f59e0b',
+              life: 18
+            });
+          }
+          break;
+        }
+      }
+
+      // Check hit against enemies
+      for (let eIdx = this.levelData.enemies.length - 1; eIdx >= 0; eIdx--) {
+        const en = this.levelData.enemies[eIdx];
+        const dist = Math.hypot(proj.x - en.x, proj.y - (en.y - 6));
         if (dist < proj.r + 20) {
           hit = true;
-          h.hp--;
+          en.hp--;
           sfx.playExplode();
 
-          if (h.hp <= 0) {
-            this.levelData.hunters.splice(hIdx, 1);
+          if (en.hp <= 0) {
+            this.levelData.enemies.splice(eIdx, 1);
+            const rewardName = en.isBoss ? 'WARLORD SLAIN! 👑' :
+                               (en.type === 'snake') ? 'SNAKE CRUSHED! +10 ✦' :
+                               (en.type === 'minotaur') ? 'MINOTAUR FELLED! +15 ✦' :
+                               (en.type === 'medusa') ? 'MEDUSA VANQUISHED! +12 ✦' :
+                               (en.type === 'wasp') ? 'WASP SWATTED! +8 ✦' : 'DEFEATED! +10 ✦';
+
             this.popups.push({
-              text: h.isBoss ? 'WARLORD SLAIN! 👑' : 'DEFEATED! +10 ✦',
-              x: h.x,
-              y: h.y - 30,
+              text: rewardName,
+              x: en.x,
+              y: en.y - 30,
               color: '#f59e0b',
               life: 45
             });
-            STATE.spheres += h.isBoss ? 20 : 2;
+            STATE.spheres += en.isBoss ? 20 : (en.type === 'minotaur' ? 3 : 2);
 
             for (let p = 0; p < 14; p++) {
               this.particles.push({
-                x: h.x,
-                y: h.y,
+                x: en.x,
+                y: en.y,
                 vx: (Math.random() - 0.5) * 7,
                 vy: -Math.random() * 6,
                 r: 4 + Math.random() * 4,
-                color: Math.random() > 0.5 ? '#ef4444' : '#f59e0b',
+                color: (en.type === 'snake') ? '#10b981' : (en.type === 'wasp') ? '#f59e0b' : '#ef4444',
                 life: 30
               });
             }
           } else {
-            this.popups.push({ text: 'ARMOR CRACKED!', x: h.x, y: h.y - 20, color: '#94a3b8', life: 25 });
+            this.popups.push({ text: 'ARMOR CRACKED!', x: en.x, y: en.y - 20, color: '#94a3b8', life: 25 });
           }
           break;
         }
@@ -2115,27 +2715,87 @@ class Game {
       }
     }
 
-    // ── 6. HUNTERS PATROL & CONTACT ──
-    for (const h of this.levelData.hunters) {
-      h.x += h.vx;
-      if (h.x > h.maxX) {
-        h.x = h.maxX;
-        h.vx = -Math.abs(h.vx);
-      } else if (h.x < h.minX) {
-        h.x = h.minX;
-        h.vx = Math.abs(h.vx);
+    // ── 6. ENEMY PATROL & ATTACKS (Environment Speed Scaled) ──
+    for (const en of this.levelData.enemies) {
+      en.x += en.vx * envMult;
+      if (en.x > en.maxX) {
+        en.x = en.maxX;
+        en.vx = -Math.abs(en.vx);
+      } else if (en.x < en.minX) {
+        en.x = en.minX;
+        en.vx = Math.abs(en.vx);
       }
 
-      const dist = Math.hypot(this.x - h.x, this.y - h.y);
+      // Medusa Shoots Arrows
+      if (en.type === 'medusa') {
+        en.shootCooldown = (en.shootCooldown || 60) - (1 * envMult);
+        const distToDragon = Math.abs(this.x - en.x);
+        if (en.shootCooldown <= 0 && distToDragon < 460) {
+          en.shootCooldown = (110 + Math.floor(Math.random() * 40)) / envMult;
+          const dir = this.x < en.x ? -1 : 1;
+          this.enemyProjectiles.push({
+            type: 'arrow',
+            x: en.x + dir * 16,
+            y: en.y - 4,
+            vx: dir * 5.5 * envMult,
+            vy: 0,
+            r: 5,
+            life: Math.floor(90 / envMult)
+          });
+          sfx.playShootArrow();
+        }
+      }
+
+      // Wasp Shoots Stings
+      if (en.type === 'wasp') {
+        en.shootCooldown = (en.shootCooldown || 50) - (1 * envMult);
+        const distToDragon = Math.abs(this.x - en.x);
+        if (en.shootCooldown <= 0 && distToDragon < 420) {
+          en.shootCooldown = (90 + Math.floor(Math.random() * 30)) / envMult;
+          const dir = this.x < en.x ? -1 : 1;
+          this.enemyProjectiles.push({
+            type: 'sting',
+            x: en.x + dir * 14,
+            y: en.y + 4,
+            vx: dir * 6.5 * envMult,
+            vy: 0,
+            r: 6,
+            life: Math.floor(80 / envMult)
+          });
+          sfx.playShootArrow();
+        }
+      }
+
+      // Contact damage with dragon
+      const dist = Math.hypot(this.x - en.x, this.y - en.y);
       if (dist < 32) {
         this.takeDamage(1);
       }
     }
 
-    // ── 7. SHEEP PATROL & EATING ──
+    // ── 7. ENEMY PROJECTILES UPDATE ──
+    for (let i = this.enemyProjectiles.length - 1; i >= 0; i--) {
+      const ep = this.enemyProjectiles[i];
+      ep.x += ep.vx;
+      ep.y += (ep.vy || 0);
+      ep.life--;
+
+      const distToPlayer = Math.hypot(this.x - ep.x, this.y - 8 - ep.y);
+      if (distToPlayer < ep.r + 18) {
+        this.takeDamage(1);
+        this.enemyProjectiles.splice(i, 1);
+        continue;
+      }
+
+      if (ep.life <= 0) {
+        this.enemyProjectiles.splice(i, 1);
+      }
+    }
+
+    // ── 8. SHEEP PATROL (Environment Speed Scaled) ──
     for (const s of this.levelData.sheep) {
       if (s.eaten) continue;
-      s.x += s.vx;
+      s.x += s.vx * envMult;
       if (s.x > s.maxX) {
         s.x = s.maxX;
         s.vx = -Math.abs(s.vx);
@@ -2150,7 +2810,7 @@ class Game {
       }
     }
 
-    // ── 8. ENERGY SPHERES ──
+    // ── 9. ENERGY SPHERES ──
     for (const s of this.levelData.spheres) {
       if (s.collected) continue;
       const dist = Math.hypot(this.x - s.x, this.y - s.y);
@@ -2159,14 +2819,14 @@ class Game {
       }
     }
 
-    // ── 9. TRAPS ──
+    // ── 10. TRAPS (Spikes & Fire Vents) ──
     for (const sp of this.levelData.spikes) {
       if (this.x >= sp.x - 12 && this.x <= sp.x + sp.w + 12 && Math.abs(this.y + 14 - sp.y) < 16) {
         this.takeDamage(1);
       }
     }
     for (const v of this.levelData.vents) {
-      v.timer = (v.timer + 1) % 180;
+      v.timer = (v.timer + 1 * envMult) % 180;
       v.active = v.timer > 100;
       if (v.active) {
         if (Math.abs(this.x - v.x) < 22 && this.y >= v.y - 48 && this.y <= v.y) {
@@ -2175,12 +2835,12 @@ class Game {
       }
     }
 
-    // ── 10. GOAL ──
+    // ── 11. GOAL ──
     if (this.x >= this.levelData.goalX) {
       this.completeLevel();
     }
 
-    // ── 11. PARTICLES & POPUPS ──
+    // ── 12. PARTICLES & POPUPS ──
     for (let i = this.particles.length - 1; i >= 0; i--) {
       const p = this.particles[i];
       p.x += p.vx;
@@ -2195,7 +2855,7 @@ class Game {
       if (pop.life <= 0) this.popups.splice(i, 1);
     }
 
-    // ── 12. CAMERA SMOOTH TRACKING ──
+    // ── 13. CAMERA TRACKING ──
     const targetCamX = this.x - V_WIDTH * 0.35;
     this.camX += (targetCamX - this.camX) * 0.08;
     if (this.camX < 0) this.camX = 0;
@@ -2205,10 +2865,11 @@ class Game {
     if (!this.levelData) return;
     ctx.clearRect(0, 0, V_WIDTH, V_HEIGHT);
 
-    // ── PARALLAX BACKGROUND ──
+    // ── 5 DISTINCT LEVEL PARALLAX BACKGROUNDS ──
     const level = STATE.currentLevel;
 
     if (level === 1) {
+      // 1. Sunlit Dragon Vale (Golden Sky)
       const skyGrad = ctx.createLinearGradient(0, 0, 0, V_HEIGHT);
       skyGrad.addColorStop(0, '#0284c7');
       skyGrad.addColorStop(0.5, '#38bdf8');
@@ -2216,41 +2877,68 @@ class Game {
       ctx.fillStyle = skyGrad;
       ctx.fillRect(0, 0, V_WIDTH, V_HEIGHT);
 
-      ctx.fillStyle = 'rgba(254, 240, 138, 0.4)';
-      ctx.beginPath();
-      ctx.arc(V_WIDTH - 120, 80, 60, 0, Math.PI * 2);
-      ctx.fill();
       ctx.fillStyle = '#fef08a';
       ctx.beginPath();
       ctx.arc(V_WIDTH - 120, 80, 35, 0, Math.PI * 2);
       ctx.fill();
 
     } else if (level === 2) {
+      // 2. Snake Mud (Murky Serpent Mire)
       const skyGrad = ctx.createLinearGradient(0, 0, 0, V_HEIGHT);
-      skyGrad.addColorStop(0, '#0f172a');
-      skyGrad.addColorStop(0.6, '#312e81');
-      skyGrad.addColorStop(1, '#4c1d95');
+      skyGrad.addColorStop(0, '#064e3b');
+      skyGrad.addColorStop(0.5, '#047857');
+      skyGrad.addColorStop(1, '#a7f3d0');
       ctx.fillStyle = skyGrad;
       ctx.fillRect(0, 0, V_WIDTH, V_HEIGHT);
 
-      if (this.tick % 240 < 4) {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
-        ctx.fillRect(0, 0, V_WIDTH, V_HEIGHT);
-      }
+      // Murky swamp moon
+      ctx.fillStyle = 'rgba(217, 249, 157, 0.5)';
+      ctx.beginPath();
+      ctx.arc(V_WIDTH - 140, 90, 45, 0, Math.PI * 2);
+      ctx.fill();
 
-    } else {
+    } else if (level === 3) {
+      // 3. Minotaur's Labyrinth (Cobalt Moonlight)
+      const skyGrad = ctx.createLinearGradient(0, 0, 0, V_HEIGHT);
+      skyGrad.addColorStop(0, '#0f172a');
+      skyGrad.addColorStop(0.5, '#1e1b4b');
+      skyGrad.addColorStop(1, '#3b82f6');
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(0, 0, V_WIDTH, V_HEIGHT);
+
+      // Full Greek Moon
+      ctx.fillStyle = '#f8fafc';
+      ctx.beginPath();
+      ctx.arc(160, 80, 36, 0, Math.PI * 2);
+      ctx.fill();
+
+    } else if (level === 4) {
+      // 4. Wasp's Hell (Fiery Amber Volcanic Hive)
       const skyGrad = ctx.createLinearGradient(0, 0, 0, V_HEIGHT);
       skyGrad.addColorStop(0, '#450a0a');
-      skyGrad.addColorStop(0.5, '#991b1b');
+      skyGrad.addColorStop(0.5, '#c2410c');
+      skyGrad.addColorStop(1, '#fde047');
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(0, 0, V_WIDTH, V_HEIGHT);
+
+    } else {
+      // 5. The Dragon Citadel (Sunset Ruins)
+      const skyGrad = ctx.createLinearGradient(0, 0, 0, V_HEIGHT);
+      skyGrad.addColorStop(0, '#311042');
+      skyGrad.addColorStop(0.5, '#881337');
       skyGrad.addColorStop(1, '#ea580c');
       ctx.fillStyle = skyGrad;
       ctx.fillRect(0, 0, V_WIDTH, V_HEIGHT);
     }
 
-    // Parallax Layer 1 (0.08x): Distant Misty Mountain Ranges
+    // Parallax Layer 1 (0.08x): Distant Mountains & Horizons
     ctx.save();
     ctx.translate(-this.camX * 0.08, 0);
-    ctx.fillStyle = (level === 1) ? 'rgba(125, 211, 252, 0.4)' : (level === 2) ? 'rgba(99, 102, 241, 0.35)' : 'rgba(153, 27, 27, 0.45)';
+    const mColor = (level === 1) ? 'rgba(125, 211, 252, 0.4)' :
+                   (level === 2) ? 'rgba(6, 78, 59, 0.45)' :
+                   (level === 3) ? 'rgba(30, 27, 75, 0.5)' :
+                   (level === 4) ? 'rgba(120, 53, 15, 0.5)' : 'rgba(136, 19, 55, 0.5)';
+    ctx.fillStyle = mColor;
     for (let i = 0; i < 16; i++) {
       const mx = i * 360 - 100;
       ctx.beginPath();
@@ -2261,13 +2949,16 @@ class Game {
     }
     ctx.restore();
 
-    // Parallax Layer 2 (0.22x): Soft Floating Clouds
+    // Parallax Layer 2 (0.22x): Clouds & Atmospherics
     ctx.save();
     ctx.translate(-this.camX * 0.22, 0);
     for (let cl = 0; cl < 14; cl++) {
       const clx = cl * 320 - 50;
       const cly = 130 + (cl % 3) * 35;
-      ctx.fillStyle = (level === 1) ? 'rgba(255, 255, 255, 0.55)' : (level === 2) ? 'rgba(199, 210, 254, 0.35)' : 'rgba(254, 215, 170, 0.35)';
+      ctx.fillStyle = (level === 1) ? 'rgba(255, 255, 255, 0.55)' :
+                      (level === 2) ? 'rgba(167, 243, 208, 0.35)' :
+                      (level === 3) ? 'rgba(199, 210, 254, 0.35)' :
+                      (level === 4) ? 'rgba(254, 215, 170, 0.4)' : 'rgba(254, 205, 211, 0.35)';
       ctx.beginPath();
       ctx.arc(clx, cly, 24, 0, Math.PI * 2);
       ctx.arc(clx + 22, cly - 10, 28, 0, Math.PI * 2);
@@ -2277,7 +2968,7 @@ class Game {
     }
     ctx.restore();
 
-    // Parallax Layer 3 (0.38x): Floating Islands & Utopia Palaces
+    // Parallax Layer 3 (0.38x): Floating Utopia Structures & Themed Scenery
     ctx.save();
     ctx.translate(-this.camX * 0.38, 0);
     for (let c = 0; c < 15; c++) {
@@ -2285,7 +2976,10 @@ class Game {
       const iy = 240 + (c % 2) * 25;
 
       // Rocky underside
-      ctx.fillStyle = (level === 1) ? '#334155' : (level === 2) ? '#1e1b4b' : '#450a0a';
+      ctx.fillStyle = (level === 1) ? '#334155' :
+                      (level === 2) ? '#14532d' :
+                      (level === 3) ? '#1e1b4b' :
+                      (level === 4) ? '#451a03' : '#450a0a';
       ctx.beginPath();
       ctx.moveTo(ix - 60, iy);
       ctx.quadraticCurveTo(ix, iy + 45, ix + 60, iy);
@@ -2293,13 +2987,19 @@ class Game {
       ctx.fill();
 
       // Grass top
-      ctx.fillStyle = (level === 1) ? '#10b981' : (level === 2) ? '#6366f1' : '#b45309';
+      ctx.fillStyle = (level === 1) ? '#10b981' :
+                      (level === 2) ? '#15803d' :
+                      (level === 3) ? '#475569' :
+                      (level === 4) ? '#b45309' : '#b45309';
       ctx.beginPath();
       ctx.ellipse(ix, iy, 62, 10, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // Glowing crystal pendant
-      ctx.fillStyle = (level === 1) ? '#38bdf8' : (level === 2) ? '#c084fc' : '#fbbf24';
+      // Hanging crystal
+      ctx.fillStyle = (level === 1) ? '#38bdf8' :
+                      (level === 2) ? '#22c55e' :
+                      (level === 3) ? '#818cf8' :
+                      (level === 4) ? '#f59e0b' : '#ef4444';
       ctx.beginPath();
       ctx.moveTo(ix, iy + 42);
       ctx.lineTo(ix + 6, iy + 56);
@@ -2308,50 +3008,41 @@ class Game {
       ctx.closePath();
       ctx.fill();
 
-      // Palace Architecture
-      ctx.fillStyle = (level === 1) ? '#f8fafc' : (level === 2) ? '#94a3b8' : '#fed7aa';
-      ctx.fillRect(ix - 24, iy - 32, 48, 32);
-      ctx.fillRect(ix - 32, iy - 42, 14, 42);
-      ctx.fillRect(ix + 18, iy - 42, 14, 42);
+      // Themed Scenery Props
+      if (level === 3) {
+        // Labyrinth Columns
+        ctx.fillStyle = '#cbd5e1';
+        ctx.fillRect(ix - 24, iy - 38, 8, 38);
+        ctx.fillRect(ix + 16, iy - 38, 8, 38);
+        ctx.fillRect(ix - 28, iy - 42, 56, 6);
+      } else if (level === 4) {
+        // Honeycomb Pillars
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillRect(ix - 18, iy - 36, 36, 36);
+        ctx.fillStyle = '#78350f';
+        ctx.fillRect(ix - 12, iy - 30, 24, 24);
+      } else {
+        // Palace Pavilion
+        ctx.fillStyle = (level === 1) ? '#f8fafc' : (level === 2) ? '#1e293b' : '#fed7aa';
+        ctx.fillRect(ix - 24, iy - 32, 48, 32);
+        ctx.fillRect(ix - 32, iy - 42, 14, 42);
+        ctx.fillRect(ix + 18, iy - 42, 14, 42);
 
-      // Rounded Domes (distinct from any arrow shape)
-      ctx.fillStyle = (level === 1) ? '#6366f1' : (level === 2) ? '#7c3aed' : '#dc2626';
-      ctx.beginPath();
-      ctx.arc(ix - 25, iy - 42, 9, Math.PI, 0);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(ix + 25, iy - 42, 9, Math.PI, 0);
-      ctx.fill();
-
-      // Grand Golden Dome in center
-      ctx.fillStyle = '#f59e0b';
-      ctx.beginPath();
-      ctx.arc(ix, iy - 32, 15, Math.PI, 0);
-      ctx.fill();
-
-      // Glowing palace windows
-      ctx.fillStyle = '#fef08a';
-      ctx.fillRect(ix - 6, iy - 20, 12, 14);
-      ctx.fillRect(ix - 29, iy - 30, 8, 10);
-      ctx.fillRect(ix + 21, iy - 30, 8, 10);
-
-      // Flying silhouette in distant sky
-      if (c % 2 === 0) {
-        ctx.fillStyle = 'rgba(15, 23, 42, 0.35)';
-        const fx = ix + 55 + Math.sin(this.tick * 0.05 + c) * 12;
-        const fy = iy - 65 + Math.cos(this.tick * 0.05 + c) * 6;
+        ctx.fillStyle = (level === 1) ? '#6366f1' : (level === 2) ? '#166534' : '#dc2626';
         ctx.beginPath();
-        ctx.moveTo(fx, fy);
-        ctx.lineTo(fx - 12, fy - 6);
-        ctx.lineTo(fx - 4, fy);
-        ctx.lineTo(fx - 12, fy + 6);
-        ctx.closePath();
+        ctx.arc(ix - 25, iy - 42, 9, Math.PI, 0);
+        ctx.arc(ix + 25, iy - 42, 9, Math.PI, 0);
+        ctx.fill();
+
+        ctx.fillStyle = '#f59e0b';
+        ctx.beginPath();
+        ctx.arc(ix, iy - 32, 15, Math.PI, 0);
         ctx.fill();
       }
     }
     ctx.restore();
 
-    // ── WORLD RENDERING ──
+    // ── WORLD CAMERA RENDERING ──
     ctx.save();
     ctx.translate(-Math.floor(this.camX), 0);
 
@@ -2360,15 +3051,24 @@ class Game {
 
     // Platforms
     for (const p of this.levelData.platforms) {
-      ctx.fillStyle = (level === 1) ? '#10b981' : (level === 2) ? '#64748b' : '#b45309';
+      ctx.fillStyle = (level === 1) ? '#10b981' :
+                      (level === 2) ? '#15803d' :
+                      (level === 3) ? '#64748b' :
+                      (level === 4) ? '#d97706' : '#b45309';
       ctx.beginPath();
       ctx.roundRect(p.x, p.y, p.w, 10, [6, 6, 0, 0]);
       ctx.fill();
 
-      ctx.fillStyle = (level === 1) ? '#334155' : (level === 2) ? '#1e293b' : '#451a03';
+      ctx.fillStyle = (level === 1) ? '#334155' :
+                      (level === 2) ? '#14532d' :
+                      (level === 3) ? '#1e293b' :
+                      (level === 4) ? '#451a03' : '#451a03';
       ctx.fillRect(p.x, p.y + 10, p.w, p.h - 10);
 
-      ctx.fillStyle = (level === 1) ? '#38bdf8' : (level === 2) ? '#c084fc' : '#fbbf24';
+      ctx.fillStyle = (level === 1) ? '#38bdf8' :
+                      (level === 2) ? '#4ade80' :
+                      (level === 3) ? '#c084fc' :
+                      (level === 4) ? '#fde047' : '#fbbf24';
       ctx.fillRect(p.x + p.w * 0.3, p.y + 14, 8, 8);
       ctx.fillRect(p.x + p.w * 0.7, p.y + 18, 6, 6);
     }
@@ -2388,11 +3088,28 @@ class Game {
     for (const s of this.levelData.sheep) {
       if (!s.eaten) drawSheep(ctx, s.x, s.y, s.vx > 0, this.tick);
     }
-    for (const h of this.levelData.hunters) {
-      drawDwarfHunter(ctx, h.x, h.y, h.vx > 0, this.tick, h.isElite, h.isBoss);
+
+    // Enemies (Dwarf, Snake, Minotaur, Medusa, Wasp)
+    for (const en of this.levelData.enemies) {
+      if (en.type === 'snake') {
+        drawSnake(ctx, en.x, en.y, en.vx > 0, this.tick);
+      } else if (en.type === 'minotaur') {
+        drawMinotaur(ctx, en.x, en.y, en.vx > 0, this.tick);
+      } else if (en.type === 'medusa') {
+        drawMedusa(ctx, en.x, en.y, en.vx > 0, this.tick);
+      } else if (en.type === 'wasp') {
+        drawWasp(ctx, en.x, en.y, en.vx > 0, this.tick);
+      } else {
+        drawDwarfHunter(ctx, en.x, en.y, en.vx > 0, this.tick, en.isElite, en.isBoss);
+      }
     }
 
-    // Projectiles
+    // Enemy Projectiles (Arrows & Stings)
+    for (const ep of this.enemyProjectiles) {
+      drawEnemyProjectile(ctx, ep);
+    }
+
+    // Player Projectiles (Fireballs)
     for (const proj of this.projectiles) {
       ctx.save();
       ctx.translate(proj.x, proj.y);
@@ -2489,17 +3206,17 @@ class Game {
     ctx.restore();
 
     ctx.save();
-    ctx.translate(V_WIDTH - 280, 20);
+    ctx.translate(V_WIDTH - 300, 20);
     ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
     ctx.beginPath();
-    ctx.roundRect(0, 0, 120, 38, 12);
+    ctx.roundRect(0, 0, 140, 38, 12);
     ctx.fill();
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
     ctx.stroke();
 
     ctx.fillStyle = '#94a3b8';
-    ctx.font = 'bold 13px sans-serif';
-    ctx.fillText(`LEVEL ${STATE.currentLevel} / ${STATE.totalLevels}`, 16, 24);
+    ctx.font = 'bold 12px sans-serif';
+    ctx.fillText(`LVL ${STATE.currentLevel}/${STATE.totalLevels} • ${STATE.envSpeed.toUpperCase()}`, 12, 24);
     ctx.restore();
   }
 }
@@ -2603,6 +3320,19 @@ document.querySelectorAll('.dragon-card').forEach(card => {
   });
 });
 
+// Environment speed selection
+document.querySelectorAll('.speed-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    const sp = btn.getAttribute('data-speed');
+    STATE.envSpeed = sp;
+    if (sp === 'low') STATE.envSpeedMult = 0.75;
+    else if (sp === 'high') STATE.envSpeedMult = 1.35;
+    else STATE.envSpeedMult = 1.0;
+  });
+});
+
 document.getElementById('start-btn').addEventListener('click', () => {
   sfx.init();
   document.getElementById('select-screen').classList.remove('active');
@@ -2659,7 +3389,6 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 }
 
-// Initial Run
 requestAnimationFrame(gameLoop);
 </script>
 </body>
